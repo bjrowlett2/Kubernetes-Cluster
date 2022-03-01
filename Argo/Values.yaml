@@ -1,0 +1,7 @@
+server:
+  extraArgs:
+  - "--insecure"
+configs:
+  secret:
+    argocdServerAdminPassword: "$2a$10$R38VQAkPfWKyN2sSAqo/7uLRXQa8bWagwIKW3AfTBDdjXdwkX8X62"
+    argocdServerAdminPasswordMtime: "2021-03-05T10:00:00Z"
