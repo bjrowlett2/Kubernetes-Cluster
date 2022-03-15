@@ -14,3 +14,8 @@ kubectl create namespace argo-system
 helm install -f ./Argo/Values.yaml argo argo/argo-cd -n argo-system
 kubectl rollout status deployment/argo-argocd-server -n argo-system
 kubectl apply -f ./Argo/Ingress-Route.yaml -n argo-system
+
+kubectl create namespace prometheus-system
+helm install prometheus prometheus/prometheus -n prometheus-system
+kubectl rollout status deployment/prometheus-server -n prometheus-system
+kubectl apply -f ./Prometheus/Ingress-Route.yaml -n prometheus-system

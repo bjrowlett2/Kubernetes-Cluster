@@ -1,0 +1,14 @@
+kind: IngressRoute
+apiVersion: traefik.containo.us/v1alpha1
+metadata:
+  name: prometheus-server
+spec:
+  entryPoints:
+  - web
+  routes:
+  - kind: Rule
+    match: Host(`prometheus-server.localhost`)
+    services:
+    - kind: Service
+      name: prometheus-server
+      port: 80
