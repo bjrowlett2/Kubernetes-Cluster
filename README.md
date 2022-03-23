@@ -11,6 +11,7 @@ Spin up a local Kubernetes cluster in seconds.
 
 ```
 > helm.exe repo add argo https://argoproj.github.io/argo-helm
+> helm.exe repo add grafana hhttps://grafana.github.io/helm-charts
 > helm.exe repo add prometheus https://prometheus-community.github.io/helm-charts
 > helm.exe repo update
 ```
