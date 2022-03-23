@@ -14,3 +14,8 @@ ports:
 - port: "8443:443"
   nodeFilters:
   - loadbalancer
+registries:
+  create:
+    name: k3d-main-registry
+    host: "0.0.0.0"
+    hostPort: "5000"
