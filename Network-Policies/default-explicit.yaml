@@ -1,0 +1,48 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: default-explicit
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: access-allow
+  namespace: default-explicit
+  labels:
+    us.crawco.com/egress-to.atomic-reader: "true"
+spec:
+  containers:
+  - name: busybox
+    image: busybox:latest
+    command:
+    - sleep
+    - infinite
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "128Mi"
+---
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: access-deny
+  namespace: default-explicit
+spec:
+  selector:
+    matchLabels:
+      name: access-deny
+  template:
+    metadata:
+      labels:
+        name: access-deny
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        command:
+        - sleep
+        - infinite
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "128Mi"

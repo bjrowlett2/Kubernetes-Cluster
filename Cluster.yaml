@@ -2,11 +2,18 @@ kind: Simple
 apiVersion: k3d.io/v1alpha4
 metadata:
   name: main
-agents: 3
+agents: 2
 servers: 1
 kubeAPI:
+  hostIP: "127.0.0.1"
   hostPort: "6443"
 network: k3d-main-network
+options:
+  k3s:
+    extraArgs:
+    - arg: "--flannel-backend=none"
+      nodeFilters:
+      - server:*
 ports:
 - port: "8080:80"
   nodeFilters:
@@ -14,8 +21,7 @@ ports:
 - port: "8443:443"
   nodeFilters:
   - loadbalancer
-registries:
-  create:
-    name: k3d-main-registry
-    host: "0.0.0.0"
-    hostPort: "5000"
+volumes:
+- volume: "C:\\Users\\Brian\\Development\\Kubernetes-Cluster\\Calico\\Manifest.yaml:/var/lib/rancher/k3s/server/manifests/calico.yaml"
+  nodeFilters:
+  - server:*

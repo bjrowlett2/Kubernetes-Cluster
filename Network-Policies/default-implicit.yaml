@@ -1,0 +1,23 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: default-implicit
+  labels:
+    us.crawco.com/egress-to.atomic-reader: "true"
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: access-allow
+  namespace: default-implicit
+spec:
+  containers:
+  - name: busybox
+    image: busybox:latest
+    command:
+    - sleep
+    - infinite
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "128Mi"

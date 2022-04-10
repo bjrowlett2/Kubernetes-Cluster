@@ -1,0 +1,103 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: atomic-reader
+  labels:
+    us.crawco.com/project: "atomic-reader"
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: default-deny-ingress
+  namespace: atomic-reader
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchLabels: {}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: project-allow-ingress
+  namespace: atomic-reader
+spec:
+  policyTypes:
+  - Ingress
+  podSelector:
+    matchLabels: {}
+  ingress:
+  # Allow from pods in the same namespace.
+  - from:
+    - podSelector:
+        matchLabels: {}
+  # Allow from pods labeled with egress-to atomic-reader in any namespace.
+  - from:
+    - podSelector:
+        matchLabels:
+          us.crawco.com/egress-to.atomic-reader: "true"
+      namespaceSelector:
+        matchLabels: {}
+  # Allow from pods in any namespace labeled with egress-to atomic-reader.
+  - from:
+    - podSelector:
+        matchLabels: {}
+      namespaceSelector:
+        matchLabels:
+          us.crawco.com/egress-to.atomic-reader: "true"
+---
+kind: Pod
+apiVersion: v1
+metadata:
+  name: hello-kubernetes
+  namespace: atomic-reader
+  labels:
+    us.crawco.com/app: hello-kubernetes
+spec:
+  containers:
+  - name: hello-kubernetes
+    image: brianrowlett/hello-kubernetes:1.0
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "128Mi"
+    ports:
+    - containerPort: 80
+---
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: access-allow
+  namespace: atomic-reader
+spec:
+  selector:
+    matchLabels:
+      us.crawco.com/app: same-namespace-pod
+  template:
+    metadata:
+      labels:
+        us.crawco.com/app: same-namespace-pod
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        command:
+        - sleep
+        - infinite
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-kubernetes
+  namespace: atomic-reader
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+  selector:
+    us.crawco.com/app: hello-kubernetes
